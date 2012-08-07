@@ -1,0 +1,10 @@
+:- module(llj:assert, [test1, test2, a/2]).
+
+:- import(llj:lang).
+:- dynamic(a/2).
+
+test1:-
+	assert(a(3,4)).
+	
+test2:-
+	assert(a(5,6)).

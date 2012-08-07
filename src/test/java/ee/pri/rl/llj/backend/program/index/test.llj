@@ -1,0 +1,50 @@
+/*
+Copyright (C) 2008-2010 Raivo Laanemets
+
+This file is part of Logic Language for Java (LLJ).
+
+LLJ is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LLJ is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with LLJ.  If not, see <http://www.gnu.org/licenses/>.
+*/
+:- module(ee:pri:rl:llj:backend:program:index:test, [
+	create_index/0,
+	a/2,
+	bench/0
+]).
+
+:- import(llj:index).
+:- import(llj:findall).
+
+create_index:-
+	index_one_argument(a, 2, 0).
+
+a(1, a).
+a(2, b).
+a(3, c).
+a(4, d).
+a(5, e).
+a(6, f).
+a(7, g).
+a(8, h).
+a(9, i).
+a(10,j).
+a(11,j).
+a(12,j).
+a(13,j).
+a(14,j).
+a(15,j).
+a(16,j).
+a(17,j).
+a(18,j).
+a(19,j).
+a(20,j).

@@ -1,0 +1,12 @@
+:- module(llj:findall_test, [
+        all_members/2
+]).
+
+:- import(llj:list).
+:- import(llj:findall).
+
+all_members(L1, L2):-
+	findall(X, member1(X, L1), L2).
+	
+member1(X, L):-
+	member(X, L).

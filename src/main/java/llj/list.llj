@@ -1,0 +1,122 @@
+/*
+Copyright (C) 2008-2010 Raivo Laanemets
+
+This file is part of Logic Language for Java (LLJ).
+
+LLJ is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LLJ is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with LLJ.  If not, see <http://www.gnu.org/licenses/>.
+*/
+:- module(llj:list, [
+        member/2,
+        length/2,
+        invert/2,
+        append/3,
+        prefix/2,
+        suffix/2,
+        sublist/2,
+        msort/2,
+        msort/3,
+        maplist/2,
+        maplist/3,
+        filter/3
+]).
+
+:- import(llj:lang).
+
+:- module_transparent(maplist/2).
+:- module_transparent(maplist/3).
+:- module_transparent(msort/3).
+:- module_transparent(merge/4).
+:- module_transparent(filter/3).
+
+maplist(Pred, [H|T]):-
+	call(Pred, H),
+	maplist(Pred, T).
+maplist(_, []).
+
+maplist(Pred, [H1|T1], [H2|T2]):-
+	call(Pred, H1, H2),
+	maplist(Pred, T1, T2).
+maplist(_, [], []).
+
+filter(Pred, [H|T], L):-
+	(call(Pred, H) ->
+		L = [H|L1],
+		filter(Pred, T, L1)
+	;
+		filter(Pred, T, L)
+	).
+filter(_, [], []).
+
+sublist(SubL,L):-
+	suffix(S,L),
+	prefix(SubL,S).
+
+prefix(P,L):-
+	append(P,_,L).
+	
+suffix(S,L):-
+	append(_,S,L).
+
+append([],L,L).
+append([H|T],L2,[H|L3]):-
+	append(T,L2,L3).
+
+length([], 0).
+length([_|Xs], N):-
+	length(Xs, N1),
+	N is N1 + 1.
+	
+invert(L1, L2):-
+	invert1(L1, [], L2).
+	
+invert1([], L, L).
+invert1([H|T], L1, L2):-
+    invert1(T, [H|L1], L2).
+
+member(X, [Y|Xs]):- X = Y ; member(X, Xs).
+	
+msort(A, B):-
+	msort(A, B, compare).
+
+msort([],[], _).
+msort([A],[A], _).
+msort([A,B|R],S,Pred):-
+	split([A,B|R],L1,L2),
+	msort(L1,S1,Pred),
+	msort(L2,S2,Pred),
+	merge(S1,S2,S,Pred).
+
+split([],[],[]).
+split([A],[A],[]).
+split([A,B|R],[A|Ra],[B|Rb]):- split(R,Ra,Rb).
+
+merge(A, B, C, Pred):-
+	(A = [] ->
+		C = B
+	;
+		(B = [] ->
+			C = A
+		;
+			A = [Ha|Ta],
+			B = [Hb|Tb],
+			C = [Hc|Tc],
+			(call(Pred, ">", Ha, Hb) ->
+				Hc = Hb,
+				merge(A, Tb, Tc, Pred)
+			;
+				Hc = Ha,
+				merge(Ta, B, Tc, Pred)
+			)
+		)
+	).

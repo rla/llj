@@ -1,0 +1,6 @@
+:- module(llj:module, [test/1]).
+
+:- import(llj:list).
+
+test(X):-
+	llj:list:member(X, [1,2]).

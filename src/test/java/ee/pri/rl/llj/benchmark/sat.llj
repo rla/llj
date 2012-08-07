@@ -1,0 +1,38 @@
+% Backtracking-heavy benchmark for Prolog
+% Solves random 3cnf sat formula.
+%
+% Raivo Laanemets, 2007 summer.
+%
+% On 2GHz Q6600 with 2x4MB cache:
+% JLog: 56s
+% rl-prolog: 35s
+% swi-prolog: 4.7s
+
+:- module(ee:pri:rl:llj:benchmark:sat, [
+	solution/1
+]).
+
+:- import(llj:list).
+:- import(llj:lang).
+
+solution(V):-
+	formula(F),
+	sat(F, V).
+
+formula([[-3, 14, -2], [9, 8, -5], [-7, 15, -1], [5, -6, -7], [4, -10, -11],
+[-2, 13, 5], [-1, 4, 14], [9, -2, 5], [-6, 11, -2], [-12, 10, 9], [-15, 9, -6],
+[9, 15, 4], [1, 2, -9], [-5, -2, 14], [-8, 15, 10], [13, -9, -4], [11, -10, -3],
+[-6, 4, -13], [9, -7, -11], [4, 5, -13], [-10, -1, -9], [-8, -2, 13], [-10, -3, -7],
+[-1, 7, 2], [-9, -7, 14], [-11, 2, -5], [13, -8, 9], [13, -2, 12], [-3, -9, -15],
+[9, 2, 15], [14, -13, 12], [15, -10, 6], [8, 9, 4], [-3, -10, 9], [-13, -1, 2],
+[-9, 8, 11], [-12, 14, -11], [-7, -13, -10], [-14, 10, 2], [-1, -8, 5]]).
+
+sat(F, V):- sat(F, [], V).
+
+sat([K|F], V1, V2):-
+	member(L, K),
+	Lc is -L,
+	not(member(Lc, V1)), % some implementations support \+ (which is iso-standard)
+	sat(F, [L|V1], V2).
+	
+sat([], V, V).
